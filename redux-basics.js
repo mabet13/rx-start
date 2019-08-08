@@ -31,3 +31,6 @@ store.dispatch({type: 'ADD_COUNTER', payload: {}, value: 10});
 console.log(store.getState());
 
 //Subscription
+store.subscribe(() => {
+    
+});
