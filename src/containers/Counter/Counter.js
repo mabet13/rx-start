@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import * as actionTypes from '../../store/actions';
 
 import CounterControl from '../../components/CounterControl/CounterControl';
 import CounterOutput from '../../components/CounterOutput/CounterOutput';
@@ -14,9 +15,11 @@ class Counter extends Component {
                 <CounterControl label="Add 5"      clicked={this.props.onAdd5ToCounter}  />
                 <CounterControl label="Subtract 5" clicked={this.props.onSub5FromCounter}  />
                 <hr />
-                <button onClick={this.props.onStoreResult}>Store Result</button>
+                <button onClick={()=> this.props.onStoreResult(this.props.ctr)}>Store Result</button>
                 <ul>
-                    <li onClick={this.props.onDeleteResult}></li>
+                    {this.props.storedResults.map(strResult => (
+                        <li key={strResult.id} onClick={() => this.props.onDeleteResult(strResult.id)}>{strResult.value}</li>
+                    ))}
                 </ul>
             </div>
         );
@@ -25,18 +28,19 @@ class Counter extends Component {
 
 const mapStateToProps = state => {
     return {
-        ctr: state.counter
+        ctr: state.ctr.counter,
+        storedResults: state.res.results
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIncrementCounter: () => dispatch({type: 'UPDATE', value: 1}),
-        onDecrementCounter: () => dispatch({type: 'UPDATE', value: -1}),
-        onAdd5ToCounter: () => dispatch({type: 'UPDATE', value: 5}),
-        onSub5FromCounter: () => dispatch({type: 'UPDATE', value: -5}),
-        onStoreResult: () => dispatch({type:'STORE_RESULT', value: 0}),
-        onDeleteResult: () => dispatch({type:'DELETE_RESULT', value: 0})
+        onIncrementCounter: () => dispatch({type: actionTypes.UPDATE, value: 1}),
+        onDecrementCounter: () => dispatch({type: actionTypes.UPDATE, value: -1}),
+        onAdd5ToCounter: () => dispatch({type: actionTypes.UPDATE, value: 5}),
+        onSub5FromCounter: () => dispatch({type: actionTypes.UPDATE, value: -5}),
+        onStoreResult: (result) => dispatch({type: actionTypes.STORE_RESULT, value: 0, result: result}),
+        onDeleteResult: (id) => dispatch({type: actionTypes.DELETE_RESULT, value: 0, resultElID: id})
     }
 };
 
